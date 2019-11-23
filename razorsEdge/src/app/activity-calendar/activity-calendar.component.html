@@ -1,0 +1,68 @@
+<div class="card">
+    <div class="card-body">
+        
+        <div class="row">
+            <div class="col-sm-5">
+                <h4 class="card-title mb-0">Training Activity</h4>
+                <div class="small text-muted ml-1">For {{ displayMonthName }} {{ displayYear }}</div>
+            </div>
+            <div class="col-sm-7 d-none d-md-block">
+                <button  type="button" class="btn btn-primary float-right" (click)="onGetActivity()">
+                    <i *ngIf="!busy"class="fa fa-refresh fa-lg"></i>
+                    <i *ngIf="busy" class="fa fa-spinner"></i>
+                </button>
+                <div class="float-right mr-3" >
+                        <div class="float-left">
+                            <training-log-year-selector [selectorType]="selectedYearType" [raiseEvents]=true [initialYear]="selectedYear" (yearChanged)="onYearChanged($event)"></training-log-year-selector>
+                        </div>
+                        <div class="float-left">
+                            <training-log-month-selector [raiseEvents]=true [initialMonth]="selectedMonth" (monthChanged)="onMonthChanged($event)"></training-log-month-selector>
+                        </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="activity-calendar-wrapper" *ngIf="!activitiesCalendarEmpty(); else noActivityTemplate">
+ 
+                <div class="activity-calendar-item border border-dark"  *ngFor="let activityCalendar of activitiesCalendar; let i=index">
+                    <div class="cardx">
+                        <div class="card-headerx text-muted ml-1">
+                            <small class="text-left mr-1">{{ activityCalendar.ActivityDate | date:'EEEE'  }}</small>
+                            <small class="text-right">{{ activityCalendar.ActivityDate | date:'shortDate'  }}</small>
+                        </div>
+
+                        <div class="card-bodyx ml-1">
+                            <button class="btn btn-link" (click)="openActivityDetailModal(activityCalendar)">
+                                <i class="fa fa-plus text-success"></i>
+                                <span class="small ml-1">Add Activity</span>
+                            </button>
+                            <ul class="list-group list-group-flush">
+                                <small class="text-muted" *ngFor="let activity of activityCalendar.Activities; let i=index">
+                                    {{ activity.ActivityCategoryCode}}: {{ activity.ActivityDuration}}
+                                </small>
+                            </ul>
+                        </div>
+                        <div *ngIf="activityCalendar.Intensity > 0" class="bg-dark text-white  text-center align-bottom">
+                            <small class="text-left">Intensity {{ activityCalendar.Intensity }}</small>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <ng-template #noActivityTemplate>
+                <div class="m-4">
+                        No activity found for the selected Year and Month.
+                </div>
+                
+            </ng-template>
+
+        </div>
+
+    </div>
+
+</div>
+
+<button type="button" class="btn btn-primary" (click)="openActivityDetailModal()">Create modal with component</button>
